@@ -24,6 +24,7 @@ return new class extends Migration
             $table->bigInteger('compte_id')->nullable();
             $table->bigInteger('annee_id')->nullable();
             $table->bigInteger('inscription_id')->nullable();
+            $table->bigInteger('utilisateur_id')->nullable();
 
 
             $table->integer('etat')->default(1);

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 
+use App\Models\Compte;
 use App\Types\TypeStatus;
 use App\Models\Utilisateur;
 use Illuminate\Support\Carbon;
@@ -256,17 +257,13 @@ class Contact extends Model
      * Retourne la liste des Contacts par ...
 
 
+     * @param  int $espace_id
+     * @param  int $compte_id
      * @param  int $annee_id
-     * @param  int $caisse_id
+
+     * @param  int $inscription_id
+
      * @param  int $utilisateur_id
-
-     * @param  int $paiement_id
-
-     * @param  int $type_Contact
-     * @param  int $statut_Contact
-
-
-
 
 
      * @return  array
@@ -274,60 +271,61 @@ class Contact extends Model
 
 
     public static function getListe(
-        $annee_id,
-        $caisse_id = null,
-        $utilisateur_id = null,
+        $espace_id = null,
+        $compte_id = null,
+        $annee_id = null,
 
-        $paiement_id = null,
-        $type_Contact = null,
+        $inscription_id = null,
+        $utilisateur_id = null,
 
         $date1 = null,
         $date2 = null
 
     ) {
 
-        $query =  Contact::where('Contacts.etat', '!=', TypeStatus::SUPPRIME)
-            ->orderBy('Contacts.created_at', 'DESC')
-            ->where('Contacts.annee_id', '=', $annee_id);
+        $query =  Contact::where('contacts.etat', '!=', TypeStatus::SUPPRIME)
+            ->orderBy('contacts.created_at', 'DESC')
+            ->where('contacts.annee_id', '=', $annee_id);
 
-        if ($caisse_id != null) {
+        if ($espace_id != null) {
 
-            $query->where('Contacts.caisse_id', '=', $caisse_id);
+            $query->where('contacts.espace_id', '=', $espace_id);
+        }
+
+        if ($compte_id != null) {
+
+            $query->where('contacts.compte_id', '=', $compte_id);
+        }
+
+
+
+        if ($inscription_id != null) {
+
+            $query->where('contacts.inscription_id', '=', $inscription_id);
         }
 
         if ($utilisateur_id != null) {
 
-            $query->where('Contacts.utilisateur_id', '=', $utilisateur_id);
-        }
-
-
-
-        if ($paiement_id != null) {
-
-            $query->where('Contacts.paiement_id', '=', $paiement_id);
-        }
-
-        if ($type_Contact != null) {
-
-            $query->where('Contacts.type_Contact', '=', $type_Contact);
+            $query->where('contacts.utilisateur_id', '=', $utilisateur_id);
         }
 
 
         if ($date1 != null && $date2 != null) {
 
-            $query->whereBetween(DB::raw("DATE_FORMAT(Contacts.date_Contact, '%Y-%m-%d')"), [$date1, $date2]);
+            $query->whereBetween('contacts.date_email', [$date1, $date2]);
         }
 
 
         if ($date1 != null && $date2 == null) {
 
-            $query->where(DB::raw("DATE_FORMAT(Contacts.date_Contact, '%Y-%m-%d')"), '=', $date1);
+            $query->where('contacts.date_email', '=', $date1);
         }
 
         if ($date1 == null && $date2 != null) {
 
-            $query->where(DB::raw("DATE_FORMAT(Contacts.date_Contact, '%Y-%m-%d')"), '=', $date2);
+            $query->where('contacts.date_email', '=', $date2);
         }
+
 
 
         return     $query->get();
@@ -342,12 +340,13 @@ class Contact extends Model
      * Retourne le total  pour ...
 
 
+     * @param  int $espace_id
+     * @param  int $compte_id
      * @param  int $annee_id
-     * @param  int $caisse_id
+
+     * @param  int $inscription_id
+
      * @param  int $utilisateur_id
-     * @param  int $paiement_id
-     * @param  int $type_Contact
-     * @param  int $statut_Contact
 
 
 
@@ -355,12 +354,12 @@ class Contact extends Model
      */
 
     public static function getTotal(
-        $annee_id,
-        $caisse_id = null,
-        $utilisateur_id = null,
+        $espace_id = null,
+        $compte_id = null,
+        $annee_id = null,
 
-        $paiement_id = null,
-        $type_Contact = null,
+        $inscription_id = null,
+        $utilisateur_id = null,
 
         $date1 = null,
         $date2 = null
@@ -373,46 +372,44 @@ class Contact extends Model
             ->where('Contacts.annee_id', '=', $annee_id)
             ;
 
-        if ($caisse_id != null) {
+            if ($espace_id != null) {
 
-            $query->where('Contacts.caisse_id', '=', $caisse_id);
-        }
+                $query->where('contacts.espace_id', '=', $espace_id);
+            }
 
-        if ($utilisateur_id != null) {
+            if ($compte_id != null) {
 
-            $query->where('Contacts.utilisateur_id', '=', $utilisateur_id);
-        }
-
-
-
-        if ($paiement_id != null) {
-
-            $query->where('Contacts.paiement_id', '=', $paiement_id);
-        }
-
-        if ($type_Contact != null) {
-
-            $query->where('Contacts.type_Contact', '=', $type_Contact);
-        }
+                $query->where('contacts.compte_id', '=', $compte_id);
+            }
 
 
-        if ($date1 != null && $date2 != null) {
 
-            $query->whereBetween(DB::raw("DATE_FORMAT(Contacts.date_Contact, '%Y-%m-%d')"), [$date1, $date2]);
-        }
+            if ($inscription_id != null) {
 
+                $query->where('contacts.inscription_id', '=', $inscription_id);
+            }
 
-        if ($date1 != null && $date2 == null) {
+            if ($utilisateur_id != null) {
 
-            $query->where(DB::raw("DATE_FORMAT(Contacts.date_Contact, '%Y-%m-%d')"), '=', $date1);
-        }
-
-        if ($date1 == null && $date2 != null) {
-
-            $query->where(DB::raw("DATE_FORMAT(Contacts.date_Contact, '%Y-%m-%d')"), '=', $date2);
-        }
+                $query->where('contacts.utilisateur_id', '=', $utilisateur_id);
+            }
 
 
+            if ($date1 != null && $date2 != null) {
+
+                $query->whereBetween('contacts.date_email', [$date1, $date2]);
+            }
+
+
+            if ($date1 != null && $date2 == null) {
+
+                $query->where('contacts.date_email', '=', $date1);
+            }
+
+            if ($date1 == null && $date2 != null) {
+
+                $query->where('contacts.date_email', '=', $date2);
+            }
 
 
         $total = $query->count();
@@ -427,92 +424,4 @@ class Contact extends Model
 
 
 
-    /**
-     * Retourne le total  pour ...
-
-
-     * @param  int $annee_id
-     * @param  int $caisse_id
-     * @param  int $utilisateur_id
-
-     * @param  int $paiement_id
-
-     * @param  int $type_Contact
-     * @param  int $statut_Contact
-
-
-
-     * @return  int $total
-     */
-
-    public static function getMontantTotal(
-        $annee_id,
-        $caisse_id = null,
-        $utilisateur_id = null,
-
-        $paiement_id = null,
-        $type_Contact = null,
-
-        $date1 = null,
-        $date2 = null
-
-    ) {
-
-        $query =    DB::table('Contacts')
-
-            ->where('Contacts.etat', '!=', TypeStatus::SUPPRIME)
-            ->where('Contacts.annee_id', '=', $annee_id);
-
-        if ($caisse_id != null) {
-
-            $query->where('Contacts.caisse_id', '=', $caisse_id);
-        }
-
-        if ($utilisateur_id != null) {
-
-            $query->where('Contacts.utilisateur_id', '=', $utilisateur_id);
-        }
-
-
-
-        if ($paiement_id != null) {
-
-            $query->where('Contacts.paiement_id', '=', $paiement_id);
-        }
-
-        if ($type_Contact != null) {
-
-            $query->where('Contacts.type_Contact', '=', $type_Contact);
-        }
-
-
-        if ($date1 != null && $date2 != null) {
-
-            $query->whereBetween('Contacts.date_Contact', [$date1, $date2]);
-        }
-
-
-        if ($date1 != null && $date2 == null) {
-
-            $query->where('Contacts.date_Contact', '=', $date1);
-        }
-
-        if ($date1 == null && $date2 != null) {
-
-            $query->where('Contacts.date_Contact', '=', $date2);
-        }
-
-
-
-
-
-        $total = $query->SUM('Contacts.montant');
-
-        if ($total) {
-
-            return   $total;
-        }
-
-        return 0;
-    }
 }
