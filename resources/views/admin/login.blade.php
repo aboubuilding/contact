@@ -48,9 +48,8 @@
                     <div class="col-lg-12">
                         <div class="text-center mt-sm-5 mb-4 text-white-50">
                             <div>
-                                <a href="index.html" class="d-inline-block auth-logo">
-                                    <img src="{{ asset('admin') }}/assets/images/logo-light.png" alt="" height="20">
-                                </a>
+
+
                             </div>
 
                         </div>
@@ -65,7 +64,7 @@
                             <div class="card-body p-4">
 
                                 <div class="text-center mb-3">
-                                    <a href="{{ url('/') }}"><img src="{{ asset('admin') }}/images/logo_mariam.png"
+                                    <a href="{{ url('/') }}"><img src="{{ asset('admin') }}/assets/images/logo_mariam.png"
                                                                   alt="" style="width: 100px; margin: auto"></a>
                                 </div>
                                 <div class="text-center mt-2">
@@ -88,7 +87,7 @@
 
                                             <label class="form-label" for="password-input">Mot de passe </label>
                                             <div class="position-relative auth-pass-inputgroup mb-3">
-                                                <input type="password" class="form-control pe-5 password-input" placeholder="Enter password" id="password-input">
+                                                <input type="password" class="form-control pe-5 password-input"  id="mot_passe" name="mot_passe">
                                                 <button class="btn btn-link position-absolute end-0 top-0 text-decoration-none text-muted password-addon" type="button" id="password-addon"><i class="ri-eye-fill align-middle"></i></button>
                                             </div>
 
